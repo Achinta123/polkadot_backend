@@ -12,7 +12,6 @@ const { Keyring } = require('@polkadot/keyring');
 
 //Test network  wss://westend-rpc.polkadot.io
 //Main Network  wss://rpc.polkadot.io
-//	wss://rococo-rpc.polkadot.io
 const wsProvider = new WsProvider('wss://westend-rpc.polkadot.io');
 const api = new ApiPromise({ provider: wsProvider });
 
@@ -35,13 +34,14 @@ app.get('/generatePolkaAddress', async (req, res) => {
 })
 
 
-//Import private key using seed
+//Import seed to get account details
 app.post('/importPrivateKey', async (req, res) => {
 
     let mnemonic = req.body.mnemonic
 
     if (mnemonic && mnemonicValidate(mnemonic)) {
-        const account = keyring.addFromMnemonic(mnemonic);
+
+        const account = getAccountInfo(mnemonic);
         res.send({ account });
     }
     else {
@@ -63,11 +63,11 @@ app.get('/getBalance/:address', async (req, res) => {
     res.send({ balance: availableBalance });
 });
 
-
-const createAccount = (mnemonic) => {
+//to signAndsend transaction
+const getAccountInfo = (mnemonic) => {
 
     const account = keyring.addFromMnemonic(mnemonic);
-    return { account, mnemonic };
+    return account
 }
 
 
@@ -76,49 +76,48 @@ const createAccount = (mnemonic) => {
 
 app.post('/createPolkaTrx', async (req, res) => {
 
+    //senders seed
     const seeds = req.body.sender
-    const address2 = req.body.receiver
-    const amountbalance = req.body.amount
 
+    //receivers address
+    const address2 = req.body.receiver
+
+    // amount to be transfer
+    const sendingAmount = req.body.amount
 
     const decimal = 10 ** api.registry.chainDecimals
 
-    //Creating account by passing seeds
-    const { account: account1 } = createAccount(seeds);
+    //Get sender account info by passing seeds
+    const account1 = getAccountInfo(seeds);
     const account1balance = await api.derive.balances.all(account1.address);
-
 
     //converting binary balance to decimal
     const availableBalance = account1balance.availableBalance / decimal
 
     //converting decimal amount to binary
-    const amount = amountbalance * decimal;
+    const amount = sendingAmount * decimal;
 
-    // //transfering WND
+    // //transfering coin (WND) 
     const transfer = api.tx.balances.transfer(address2, amount);
 
+    //Transaction fee calculation
     const { partialFee } = await transfer.paymentInfo(account1.address);
     const fees = partialFee.muln(110).divn(100);
 
-
-    //total amount checking for transfer
+    //sending amount + network fees 
     const totalAmount = (amount + parseFloat(fees) + parseFloat(api.consts.balances.existentialDeposit)) / decimal
 
-
-    // query balance
+    // query sender balance
     if (totalAmount > availableBalance) {
         res.send({ error: `Cannot transfer ${totalAmount} with ${availableBalance} left` });
     }
     else {
+         //sign the transaction with sender's secret key
         const tx = await transfer.signAndSend(account1);
         res.send({ tx: tx });
     }
 
 });
 
-app.get('/', (req, res) => {
-    res.send('This is a test API');
-});
-
-const port = 3000;
+const port = 8081;
 app.listen(port, () => console.log(`Listening on port ${port}`));
