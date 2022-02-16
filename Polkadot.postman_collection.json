@@ -1,0 +1,141 @@
+{
+	"info": {
+		"_postman_id": "0f1f286d-b886-4419-9153-087276c8acbc",
+		"name": "Polkadot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createAccount",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/generatePolkaAddress",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"generatePolkaAddress"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "sender",
+							"value": "5GWpWvJEDfpTNLokdVYh7S1W2MAA8pi1ummy76LecnH4qhM6",
+							"type": "text"
+						},
+						{
+							"key": "receiver",
+							"value": "5DcXG1raFwQTsxCLPWHWdHsgz99JtYADnjLwt72cMn1DVax4",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "0.1",
+							"type": "text"
+						},
+						{
+							"key": "account",
+							"value": "{\n    \"account\": {\n        \"address\": \"5GWpWvJEDfpTNLokdVYh7S1W2MAA8pi1ummy76LecnH4qhM6\",\n        \"addressRaw\": {\n            \"0\": 196,\n            \"1\": 219,\n            \"2\": 187,\n            \"3\": 113,\n            \"4\": 108,\n            \"5\": 182,\n            \"6\": 241,\n            \"7\": 110,\n            \"8\": 122,\n            \"9\": 166,\n            \"10\": 8,\n            \"11\": 204,\n            \"12\": 218,\n            \"13\": 216,\n            \"14\": 92,\n            \"15\": 153,\n            \"16\": 3,\n            \"17\": 16,\n            \"18\": 233,\n            \"19\": 69,\n            \"20\": 173,\n            \"21\": 64,\n            \"22\": 163,\n            \"23\": 65,\n            \"24\": 45,\n            \"25\": 145,\n            \"26\": 195,\n            \"27\": 37,\n            \"28\": 196,\n            \"29\": 130,\n            \"30\": 247,\n            \"31\": 127\n        },\n        \"isLocked\": false,\n        \"meta\": {},\n        \"publicKey\": {\n            \"0\": 196,\n            \"1\": 219,\n            \"2\": 187,\n            \"3\": 113,\n            \"4\": 108,\n            \"5\": 182,\n            \"6\": 241,\n            \"7\": 110,\n            \"8\": 122,\n            \"9\": 166,\n            \"10\": 8,\n            \"11\": 204,\n            \"12\": 218,\n            \"13\": 216,\n            \"14\": 92,\n            \"15\": 153,\n            \"16\": 3,\n            \"17\": 16,\n            \"18\": 233,\n            \"19\": 69,\n            \"20\": 173,\n            \"21\": 64,\n            \"22\": 163,\n            \"23\": 65,\n            \"24\": 45,\n            \"25\": 145,\n            \"26\": 195,\n            \"27\": 37,\n            \"28\": 196,\n            \"29\": 130,\n            \"30\": 247,\n            \"31\": 127\n        },\n        \"type\": \"sr25519\"\n    }\n}",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/createPolkaTrx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"createPolkaTrx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBalance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/getBalance/5GWpWvJEDfpTNLokdVYh7S1W2MAA8pi1ummy76LecnH4qhM6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"getBalance",
+						"5GWpWvJEDfpTNLokdVYh7S1W2MAA8pi1ummy76LecnH4qhM6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "networkConnect",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/connect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"connect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "importAccount",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "mnemonic",
+							"value": "exotic ski jazz network mobile unit subway slim rebel garbage milk fringe",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/importPrivateKey",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"importPrivateKey"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
