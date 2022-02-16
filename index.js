@@ -9,23 +9,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const { mnemonicGenerate, mnemonicValidate } = require('@polkadot/util-crypto');
 const { ApiPromise, WsProvider } = require('@polkadot/api');
 const { Keyring } = require('@polkadot/keyring');
-const BN = require('bn.js');
 
 //Test network  wss://westend-rpc.polkadot.io
 //Main Network  wss://rpc.polkadot.io
+//	wss://rococo-rpc.polkadot.io
 const wsProvider = new WsProvider('wss://westend-rpc.polkadot.io');
 const api = new ApiPromise({ provider: wsProvider });
 
 // Constuct the keyring after the API (crypto has an async init)
 const keyring = new Keyring({ type: 'sr25519' });
 
-
-
 //checking network connection status
 app.get('/connect', async (req, res) => {
     res.send({ message: `Network is connected: ${api.isConnected}` });
 });
-
 
 
 //Create account using mnemonic , address type: Generic Substrate addresses
@@ -45,7 +42,6 @@ app.post('/importPrivateKey', async (req, res) => {
 
     if (mnemonic && mnemonicValidate(mnemonic)) {
         const account = keyring.addFromMnemonic(mnemonic);
-
         res.send({ account });
     }
     else {
@@ -68,44 +64,54 @@ app.get('/getBalance/:address', async (req, res) => {
 });
 
 
+const createAccount = (mnemonic) => {
+
+    const account = keyring.addFromMnemonic(mnemonic);
+    return { account, mnemonic };
+}
+
+
 //Initia transaction function 
 //Polkadot testnet explorer  https://westend.subscan.io/
 
 app.post('/createPolkaTrx', async (req, res) => {
 
-
-    const address1 = req.body.sender
+    const seeds = req.body.sender
     const address2 = req.body.receiver
-    // const amountSend = 0.1
+    const amountbalance = req.body.amount
 
-    const account1balance = await api.derive.balances.all(address1);
-    const availableBalance = account1balance.availableBalance;
 
-    //BN to decimal conversion
-    const decims = new BN(api.registry.chainDecimals);
-    const factor = new BN(10).pow(decims);
-    const amount = new BN(0.01).mul(factor);
+    const decimal = 10 ** api.registry.chainDecimals
 
-    //transfering WND
-    const transfer = api.tx.balances.transfer(address2, amount)
+    //Creating account by passing seeds
+    const { account: account1 } = createAccount(seeds);
+    const account1balance = await api.derive.balances.all(account1.address);
 
-    const { partialFee } = await transfer.paymentInfo(address1);
+
+    //converting binary balance to decimal
+    const availableBalance = account1balance.availableBalance / decimal
+
+    //converting decimal amount to binary
+    const amount = amountbalance * decimal;
+
+    // //transfering WND
+    const transfer = api.tx.balances.transfer(address2, amount);
+
+    const { partialFee } = await transfer.paymentInfo(account1.address);
     const fees = partialFee.muln(110).divn(100);
 
-    // //total amount checking for transfer
-    const totalAmount = amount
-        .add(fees)
-        .add(api.consts.balances.existentialDeposit);
+
+    //total amount checking for transfer
+    const totalAmount = (amount + parseFloat(fees) + parseFloat(api.consts.balances.existentialDeposit)) / decimal
 
 
-    //  // query balance
-    if (totalAmount.gt(availableBalance)) {
-        res.send({ error: `Cannot transfer ${amount} with ${availableBalance} left` });
+    // query balance
+    if (totalAmount > availableBalance) {
+        res.send({ error: `Cannot transfer ${totalAmount} with ${availableBalance} left` });
     }
-    //sign transaction
     else {
-        const tx = await transfer.signAndSend(address1);
-        res.send({ tx: availableBalance, amount: amount, tx: tx });
+        const tx = await transfer.signAndSend(account1);
+        res.send({ tx: tx });
     }
 
 });
