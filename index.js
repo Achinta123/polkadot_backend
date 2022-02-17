@@ -15,13 +15,61 @@ const { Keyring } = require('@polkadot/keyring');
 const wsProvider = new WsProvider('wss://westend-rpc.polkadot.io');
 const api = new ApiPromise({ provider: wsProvider });
 
-// Constuct the keyring after the API (crypto has an async init)
-const keyring = new Keyring({ type: 'sr25519' });
 
 //checking network connection status
 app.get('/connect', async (req, res) => {
     res.send({ message: `Network is connected: ${api.isConnected}` });
 });
+
+//we are using keyring sr25519 to ecrypt and decrypt the address and public key
+const keyring = new Keyring({ type: 'sr25519' });
+
+// decrypting address
+app.post('/decryption', async (req, res) => {
+    let address = req.body.address
+
+    //decrypt address using sr25519
+    const decryption = keyring.decodeAddress(address)
+    console.log("decryption",decryption);
+    res.send({ decryption });
+});
+
+// encrypting public key provide conversion of any address to polkadot address (1)
+app.post('/encryption', async (req, res) => {
+    let publicKey = JSON.parse(req.body.publicKey)
+
+   //encrypt address using sr25519
+    const encryption = keyring.encodeAddress(Uint8Array.from(publicKey), 0)
+    res.send(encryption);
+});
+
+
+//Create account using mnemonic , address type: Polka addresses start with 1
+app.get('/getPolkaAddress', async (req, res) => {
+   
+    // adjust the default ss58Format for Polkadot
+    keyring.setSS58Format(0);
+
+    const mnemonic=mnemonicGenerate();
+    //Creating account using ss58Format keyring start with 1
+    const account = keyring.addFromMnemonic(mnemonic);
+
+    res.send({ account, mnemonic });
+})
+
+
+//Create account using mnemonic , address type: Kusama addresses start with Capital letter
+app.get('/getKusamaAddress', async (req, res) => {
+   
+    // adjust the default ss58Format for Polkadot
+    keyring.setSS58Format(2);
+
+    //Creating account using ss58Format keyring start with 1
+    const account = keyring.addFromMnemonic(mnemonicGenerate());
+
+    res.send({ account, account });
+})
+
 
 
 //Create account using mnemonic , address type: Generic Substrate addresses
