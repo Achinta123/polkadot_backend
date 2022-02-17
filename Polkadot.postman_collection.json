@@ -6,19 +6,57 @@
 	},
 	"item": [
 		{
-			"name": "createAccount",
+			"name": "createAccountPolka",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/generatePolkaAddress",
+					"raw": "http://localhost:8081/generatePolkaAddress",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8081",
 					"path": [
 						"generatePolkaAddress"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createAccountKusama",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/getKusamaAddress",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"getKusamaAddress"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createAccountGeneric",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/generateGenericAddress",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"generateGenericAddress"
 					]
 				}
 			},
@@ -34,12 +72,12 @@
 					"urlencoded": [
 						{
 							"key": "sender",
-							"value": "5GWpWvJEDfpTNLokdVYh7S1W2MAA8pi1ummy76LecnH4qhM6",
+							"value": "cricket sea owner crazy danger sentence length renew rain spell print foster",
 							"type": "text"
 						},
 						{
 							"key": "receiver",
-							"value": "5DcXG1raFwQTsxCLPWHWdHsgz99JtYADnjLwt72cMn1DVax4",
+							"value": "Cp7ZGLXMJ1c1YVtS9Qt4jufNDkWqgh39N6GAmLmTRuWV7dq",
 							"type": "text"
 						},
 						{
@@ -56,12 +94,12 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:3000/createPolkaTrx",
+					"raw": "http://localhost:8081/createPolkaTrx",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8081",
 					"path": [
 						"createPolkaTrx"
 					]
@@ -75,15 +113,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/getBalance/5GWpWvJEDfpTNLokdVYh7S1W2MAA8pi1ummy76LecnH4qhM6",
+					"raw": "http://localhost:8081/getBalance/14akjYCdTjvnPN7cVgZ14qManYAPQfZutKtFSeFT2cbNqw1H",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8081",
 					"path": [
 						"getBalance",
-						"5GWpWvJEDfpTNLokdVYh7S1W2MAA8pi1ummy76LecnH4qhM6"
+						"14akjYCdTjvnPN7cVgZ14qManYAPQfZutKtFSeFT2cbNqw1H"
 					]
 				}
 			},
@@ -95,12 +133,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/connect",
+					"raw": "http://localhost:8081/connect",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8081",
 					"path": [
 						"connect"
 					]
@@ -124,14 +162,72 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:3000/importPrivateKey",
+					"raw": "http://localhost:8081/importPrivateKey",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8081",
 					"path": [
 						"importPrivateKey"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "decryption",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "address",
+							"value": "FUhU57f5MTyaH5CgPZLTWZXV9fGmQrkirFrjYmSPoDCB9pL",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8081/decryption",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"decryption"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "encryption",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "publicKey",
+							"value": "[\n  128, 107,  30,  17,  65,  79,  76, 203,\n    6, 101,  52,  16, 255, 212,  81, 108,\n  241, 151, 219, 102, 213,  11, 181, 203,\n  119, 209,  74,  73,  37, 179, 226,   4\n]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8081/encryption",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"encryption"
 					]
 				}
 			},
